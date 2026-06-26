@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en" class="dark theme-amoled">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tick Clock</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "var(--color-primary)",
+                        "on-primary": "var(--color-on-primary)",
+                        "primary-container": "var(--color-primary-container)",
+                        "on-primary-container": "var(--color-on-primary-container)",
+                        "secondary": "var(--color-secondary)",
+                        "on-secondary": "var(--color-on-secondary)",
+                        "secondary-container": "var(--color-secondary-container)",
+                        "on-secondary-container": "var(--color-on-secondary-container)",
+                        "tertiary": "var(--color-tertiary)",
+                        "on-tertiary": "var(--color-on-tertiary)",
+                        "tertiary-container": "var(--color-tertiary-container)",
+                        "on-tertiary-container": "var(--color-on-tertiary-container)",
+                        "error": "var(--color-error)",
+                        "on-error": "var(--color-on-error)",
+                        "error-container": "var(--color-error-container)",
+                        "on-error-container": "var(--color-on-error-container)",
+                        "background": "var(--color-background)",
+                        "on-background": "var(--color-on-background)",
+                        "surface": "var(--color-surface)",
+                        "on-surface": "var(--color-on-surface)",
+                        "surface-variant": "var(--color-surface-variant)",
+                        "on-surface-variant": "var(--color-on-surface-variant)",
+                        "outline": "var(--color-outline)",
+                        "outline-variant": "var(--color-outline-variant)",
+                        "surface-tint": "var(--color-surface-tint)",
+                        "inverse-surface": "var(--color-inverse-surface)",
+                        "inverse-on-surface": "var(--color-inverse-on-surface)",
+                        "inverse-primary": "var(--color-inverse-primary)",
+                        "surface-bright": "var(--color-surface-bright)",
+                        "surface-container-lowest": "var(--color-surface-container-lowest)",
+                        "surface-container-low": "var(--color-surface-container-low)",
+                        "surface-container": "var(--color-surface-container)",
+                        "surface-container-high": "var(--color-surface-container-high)",
+                        "surface-container-highest": "var(--color-surface-container-highest)",
+                        "primary-fixed": "var(--color-primary-fixed)",
+                        "primary-fixed-dim": "var(--color-primary-fixed-dim)",
+                        "on-primary-fixed": "var(--color-on-primary-fixed)",
+                        "on-primary-fixed-variant": "var(--color-on-primary-fixed-variant)",
+                        "secondary-fixed": "var(--color-secondary-fixed)",
+                        "secondary-fixed-dim": "var(--color-secondary-fixed-dim)",
+                        "on-secondary-fixed": "var(--color-on-secondary-fixed)",
+                        "on-secondary-fixed-variant": "var(--color-on-secondary-fixed-variant)",
+                        "tertiary-fixed": "var(--color-tertiary-fixed)",
+                        "tertiary-fixed-dim": "var(--color-tertiary-fixed-dim)",
+                        "on-tertiary-fixed": "var(--color-on-tertiary-fixed)",
+                        "on-tertiary-fixed-variant": "var(--color-on-tertiary-fixed-variant)",
+                        "primary-dim": "var(--color-primary-dim)",
+                        "secondary-dim": "var(--color-secondary-dim)",
+                        "tertiary-dim": "var(--color-tertiary-dim)",
+                        "error-dim": "var(--color-error-dim)"
+                    },
+                    fontFamily: {
+                        "headline": ["Plus Jakarta Sans"], /* Standard headers */
+                        "clock": ["Space Grotesk"], /* <-- TRY SWAPPING THIS EXACT STRING TO: "Space Grotesk", "Outfit", "Syne", or "JetBrains Mono" */
+                        "body": ["Manrope"],
+                        "label": ["Manrope"]
+                    },
+                    borderRadius: { "DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body
+    class="bg-surface text-on-surface font-body min-h-screen flex flex-col overflow-x-hidden selection:bg-primary-container relative w-full">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"
+        class="fixed top-20 left-1/2 transform -translate-x-1/2 z-[100] flex flex-col gap-2 pointer-events-none w-11/12 max-w-sm">
+    </div>
+
+    <!-- SCREENS -->
+
+    <!-- Screen 1: Main Clock -->
+    <div id="screen-clock" class="screen flex flex-col min-h-screen pb-32">
+        <!-- Landscape Sleep Timer counter -->
+        <div id="landscape-sleep-timer"
+            class="fixed top-6 right-8 flex items-center gap-2 bg-surface-container-high/80 backdrop-blur-md px-4 py-2 rounded-full border border-outline-variant/10 shadow-sm z-[100] transition-opacity cursor-pointer transform active:scale-95 duration-200">
+            <span class="material-symbols-outlined text-primary text-sm font-bold animate-pulse">hourglass_empty</span>
+            <span id="landscape-timer-text"
+                class="font-headline font-bold text-sm tracking-wide text-on-surface">00:00:00</span>
+        </div>
+
+        <!-- Landscape Settings Button (Top Left) -->
+        <button id="landscape-settings-btn"
+            class="fixed top-6 left-8 z-[100] bg-surface-container-high/80 backdrop-blur-md p-3 rounded-full border border-outline-variant/10 shadow-sm opacity-0 pointer-events-none transition-all duration-300 active:scale-90 landscape:flex hidden">
+            <span class="material-symbols-outlined text-on-surface-variant text-xl">settings</span>
+        </button>
+
+        <header
+            class="w-full top-0 sticky bg-surface/80 backdrop-blur-md flex items-center justify-between px-6 py-4 z-50">
+            <h1 class="font-headline text-2xl font-bold tracking-tight text-on-surface">Clock</h1>
+        </header>
+        <main class="flex-1 flex flex-col items-center justify-center px-6 relative mt-10">
+            <!-- Background Accent Glow -->
+            <div class="absolute inset-0 flex items-center justify-center -z-10 opacity-100">
+                <div class="w-[200px] h-[200px] blur-[40px] rounded-full theme-glow"
+                    style="background: radial-gradient(circle at center, var(--color-primary) 10%, transparent 80%);">
+                </div>
+            </div>
+
+            <section class="flex flex-col items-center justify-center w-full gap-8">
+                <!-- Glassmorphic Edge Light Clock Display -->
+                <div class="flex flex-col items-center gap-4 landscape:gap-8">
+                    <div class="flex flex-col landscape:flex-row items-center gap-6 landscape:gap-4 md:gap-8">
+                        <!-- Hour Block -->
+                        <div
+                            class="relative rounded-[2rem] md:rounded-[2.5rem] p-[3px] overflow-hidden edge-light-wrapper shadow-[0_16px_40px_rgba(0,0,0,0.15)]">
+                            <!-- Spinning Edge Lighting -->
+                            <div class="absolute inset-[-100%] spin-lighting opacity-80"></div>
+
+                            <!-- Frosted Glass Card -->
+                            <div
+                                class="relative flex flex-col items-center justify-center w-[180px] h-[200px] sm:w-[220px] sm:h-[240px] md:w-[220px] md:h-[240px] landscape:w-[240px] landscape:h-[260px] bg-surface/40 backdrop-blur-2xl rounded-[calc(2rem-3px)] md:rounded-[calc(2.5rem-3px)] border border-surface-bright/30 z-10 transition-all">
+                                <h2 id="main-clock-hours"
+                                    class="font-clock text-8xl sm:text-[10rem] md:text-[8rem] landscape:text-[9rem] font-medium tracking-tighter leading-none text-on-surface select-none drop-shadow-sm">
+                                    10</h2>
+                                <div class="flex items-center gap-2 mt-3 md:mt-5">
+                                    <span
+                                        class="font-label text-[10px] md:text-sm font-bold tracking-[0.25em] text-on-surface-variant opacity-80">HOUR</span>
+                                    <!-- AM/PM Badge -->
+                                    <div
+                                        class="flex items-center justify-center px-2 py-[2px] md:px-3 md:py-1 border border-surface-bright/30 bg-surface/40 backdrop-blur-xl rounded-full shadow-sm transition-colors opacity-90">
+                                        <span id="main-clock-ampm"
+                                            class="font-label text-[9px] md:text-xs font-black uppercase tracking-widest text-on-surface drop-shadow-sm">PM</span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Minute Block -->
+                        <div
+                            class="relative rounded-[2rem] md:rounded-[2.5rem] p-[3px] overflow-hidden edge-light-wrapper shadow-[0_16px_40px_rgba(0,0,0,0.15)]">
+                            <!-- Spinning Edge Lighting -->
+                            <div class="absolute inset-[-100%] spin-lighting opacity-80"
+                                style="animation-direction: reverse;"></div>
+
+                            <!-- Frosted Glass Card -->
+                            <div
+                                class="relative flex flex-col items-center justify-center w-[180px] h-[200px] sm:w-[220px] sm:h-[240px] md:w-[220px] md:h-[240px] landscape:w-[240px] landscape:h-[260px] bg-surface/40 backdrop-blur-2xl rounded-[calc(2rem-3px)] md:rounded-[calc(2.5rem-3px)] border border-surface-bright/30 z-10 transition-all">
+                                <h2 id="main-clock-minutes"
+                                    class="font-clock text-8xl sm:text-[10rem] md:text-[8rem] landscape:text-[9rem] font-medium tracking-tighter leading-none text-on-surface select-none drop-shadow-sm">
+                                    38</h2>
+
+                                <div class="flex items-center gap-2 mt-3 md:mt-5">
+                                    <span
+                                        class="font-label text-[10px] md:text-sm font-bold tracking-[0.25em] text-on-surface-variant opacity-80">MINUTE</span>
+
+                                    <!-- Seconds-->
+                                    <div
+                                        class="flex items-center justify-center px-2 py-[2px] md:px-3 md:py-1 border border-surface-bright/30 bg-surface/40 backdrop-blur-xl rounded-full shadow-sm transition-colors opacity-90">
+                                        <span id="main-clock-seconds"
+                                            class="font-label tabular-nums text-[9px] md:text-xs font-black uppercase tracking-widest text-on-surface drop-shadow-sm">00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p id="main-clock-date"
+                        class="font-label text-on-surface-variant text-lg tracking-wide mt-6 font-medium">
+                        Monday, Oct 23
+                    </p>
+                </div>
+
+                <!-- Interaction Layer -->
+                <div class="interaction-layer flex flex-col items-center gap-8 z-10">
+                    <button
+                        class="btn-switch-theme bg-secondary-container/40 backdrop-blur-xl border border-secondary-container/50 text-on-secondary-container px-8 py-4 rounded-xl flex items-center gap-3 font-label font-bold shadow-lg hover:bg-secondary-container/60 transition-all active:scale-95 duration-200">
+                        <span class="material-symbols-outlined theme-icon" data-icon="dark_mode">dark_mode</span>
+                        <span>Switch Theme</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Screen 2: Settings -->
+    <div id="screen-settings" class="screen hidden flex flex-col min-h-screen pb-32">
+        <header class="bg-surface sticky top-0 z-50">
+            <div class="flex items-center px-6 py-8 w-full">
+                <nav>
+                    <button id="nav-btn-back-settings"
+                        class="nav-btn-back mr-6 text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-all active:scale-95"
+                        data-target="screen-clock">
+                        <span class="material-symbols-outlined text-2xl">arrow_back</span>
+                    </button>
+                </nav>
+                <h1 class="font-headline text-3xl tracking-tight font-bold text-on-surface">Settings</h1>
+            </div>
+        </header>
+        <main class="w-full px-6 space-y-8">
+            <!-- Theme Selection Section -->
+            <section class="mt-2">
+                <div class="flex justify-between items-end mb-6">
+                    <h2 class="font-headline text-xl font-bold tracking-tight">Theme selection</h2>
+                    <span
+                        class="text-on-surface-variant font-label text-xs font-bold px-3 py-1 bg-surface-container rounded-full">4
+                        available</span>
+                </div>
+                <!-- Horizontal scroll wrapper -->
+                <div class="flex w-full overflow-x-auto hide-scrollbar -mx-6 px-6 pb-4 gap-4 snap-x snap-mandatory">
+                    <!-- Organic Chronos -->
+                    <div class="theme-card snap-center flex-none w-56 h-72 relative rounded-xl overflow-hidden group hover:scale-[1.02] border-2 border-transparent transition-all cursor-pointer"
+                        data-theme="theme-organic">
+                        <div
+                            class="absolute inset-0 bg-gradient-to-br from-[#e8dfff] via-[#FAF8FF] to-[#           eeeef0]">
+                        </div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-end p-5 bg-gradient-to-t from-black/80 to-transparent">
+                            <span
+                                class="check-icon hidden bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-xs"
+                                    style="font-variation-settings: 'FILL' 1;">check</span>
+                            </span>
+                            <h3 class="font-headline text-lg font-bold text-white leading-tight">Organic Chronos</h3>
+                            <p class="text-white/70 text-xs font-label">Default Material You</p>
+                        </div>
+                    </div>
+                    <!-- Neon Nocturne -->
+                    <div class="theme-card snap-center flex-none w-56 h-72 relative rounded-xl overflow-hidden group hover:scale-[1.02] border-2 border-transparent transition-all cursor-pointer"
+                        data-theme="theme-neon">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#050a15] via-[#0084ff] to-[#00aeff]"></div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-end p-5 bg-gradient-to-t from-black/80 to-transparent">
+                            <span
+                                class="check-icon hidden bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-xs"
+                                    style="font-variation-settings: 'FILL' 1;">check</span>
+                            </span>
+                            <h3 class="font-headline text-lg font-bold text-white leading-tight">Neon Nocturne</h3>
+                            <p class="text-white/70 text-xs font-label">High-contrast vibrant</p>
+                        </div>
+                    </div>
+                    <!-- Solar Dust -->
+                    <div class="theme-card snap-center flex-none w-56 h-72 relative rounded-xl overflow-hidden group hover:scale-[1.02] border-2 border-transparent transition-all cursor-pointer"
+                        data-theme="theme-solar">
+                        <div class="absolute inset-0 bg-gradient-to-br from-[#fefae0] via-[#dda15e] to-[#606c38]"></div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-end p-5 bg-gradient-to-t from-black/80 to-transparent">
+                            <span
+                                class="check-icon hidden bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-xs"
+                                    style="font-variation-settings: 'FILL' 1;">check</span>
+                            </span>
+                            <h3 class="font-headline text-lg font-bold text-white leading-tight">Solar Dust</h3>
+                            <p class="text-white/70 text-xs font-label">Muted earth tones</p>
+                        </div>
+                    </div>
+                    <!-- Pitch Black (AMOLED) -->
+                    <div class="theme-card active snap-center flex-none w-56 h-72 relative rounded-xl overflow-hidden group border-2 border-primary transition-all cursor-pointer"
+                        data-theme="theme-amoled">
+                        <div class="absolute inset-0 bg-black"></div>
+                        <div
+                            class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(46,38,69,0.6)_0%,transparent_70%)]">
+                        </div>
+                        <div
+                            class="absolute inset-0 flex flex-col justify-end p-5 bg-gradient-to-t from-black/90 to-transparent">
+                            <span
+                                class="check-icon bg-primary text-on-primary w-6 h-6 rounded-full flex items-center justify-center mb-2">
+                                <span class="material-symbols-outlined text-xs"
+                                    style="font-variation-settings: 'FILL' 1;">check</span>
+                            </span>
+                            <h3 class="font-headline text-lg font-bold text-white leading-tight">Pitch Black</h3>
+                            <p class="text-white/70 text-xs font-label">Battery saving OLED</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Time Settings -->
+            <div class="bg-surface-container rounded-xl p-6 flex flex-col justify-between">
+                <div>
+                    <h3 class="font-headline text-lg font-bold mb-5 text-primary">Time Display</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <span class="material-symbols-outlined text-on-surface-variant">schedule</span>
+                                <div>
+                                    <p class="font-bold text-sm">24-hour format</p>
+                                    <p class="text-xs text-on-surface-variant">Use military time display</p>
+                                </div>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="toggle-24h" class="sr-only peer">
+                                <div
+                                    class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-outline after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Version Info -->
+            <div
+                class="bg-surface-container-low rounded-xl p-6 flex flex-col justify-center border border-outline-variant/10 text-center space-y-2">
+                <p class="font-headline font-extrabold text-2xl tracking-tighter opacity-20">TICK CLOCK</p>
+                <p class="text-on-surface-variant font-label text-xs font-bold">Version 1.0</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Screen 3: Sleep Timer -->
+    <div id="screen-timer" class="screen hidden flex flex-col min-h-screen pb-32">
+        <header class="flex items-center justify-between px-6 pt-6 pb-2">
+            <nav>
+                <button id="nav-btn-back-timer"
+                    class="nav-btn-back flex h-10 w-10 items-center justify-center rounded-full hover:bg-surface-container transition-colors"
+                    data-target="screen-clock">
+                    <span class="material-symbols-outlined text-on-surface text-xl"
+                        data-icon="arrow_back">arrow_back</span>
+                </button>
+            </nav>
+            <h1 class="font-headline text-lg font-bold tracking-tight text-on-surface">Sleep Timer</h1>
+            <div class="w-10"></div>
+        </header>
+
+        <main class="flex-1 flex flex-col px-6">
+            <!-- Glassmorphic Countdown Card -->
+            <div
+                class="mt-4 mb-8 flex flex-col items-center w-full max-w-[280px] sm:max-w-[340px] mx-auto aspect-square relative transition-all duration-300">
+                <!-- Spinning Halo (Outside main circle to allow spill) -->
+                <div id="timer-halo"
+                    class="absolute inset-[-5%] rounded-full overflow-hidden opacity-100 transition-opacity pointer-events-none duration-1000">
+                    <div class="absolute inset-[-100%] spin-lighting opacity-60 blur-md"
+                        style="animation-duration: 8s;"></div>
+                </div>
+
+                <div
+                    class="absolute inset-0 rounded-full p-[3px] overflow-hidden edge-light-wrapper shadow-[0_16px_40px_rgba(0,0,0,0.15)]">
+                    <!-- Spinning Edge Lighting (Hidden here since it moved to the halo) -->
+                    <div class="absolute inset-[-100%] spin-lighting opacity-0" style="animation-duration: 15s;"></div>
+
+                    <!-- Background Accent Glow (Starts with timer) -->
+                    <div id="timer-glow"
+                        class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity">
+                        <div class="w-[200px] h-[200px] blur-[30px] rounded-full"
+                            style="background: radial-gradient(circle at center, var(--color-primary) 10%, transparent 80%);">
+                        </div>
+                    </div>
+
+                    <!-- Frosted Glass Core -->
+                    <div
+                        class="relative w-full h-full flex items-center justify-center bg-surface/40 backdrop-blur-2xl rounded-full border border-surface-bright/30 z-10 p-4 transition-colors">
+                        <!-- Responsive SVG Ring -->
+                        <svg class="absolute inset-0 w-full h-full -rotate-90 origin-center drop-shadow-md p-1"
+                            viewBox="0 0 100 100">
+                            <!-- Background track -->
+                            <circle class="text-surface-container-highest opacity-40" cx="50" cy="50" r="46" fill="none"
+                                stroke="currentColor" stroke-width="4"></circle>
+                            <!-- Dynamic Progress Ring -->
+                            <circle id="timer-progress-ring"
+                                class="text-primary transition-all duration-1000 ease-linear drop-shadow-[0_0_8px_rgba(var(--color-primary-rgb),0.5)]"
+                                cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="4"
+                                stroke-linecap="round" stroke-dasharray="289.026" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <!-- Display Core: Redesigned Grid Layout -->
+                        <div class="z-10 flex flex-col items-center justify-center h-full w-full px-8 py-6">
+
+                            <!-- Top Tier: Hours -->
+                            <div class="h-10 flex items-center justify-center">
+                                <span id="display-hours-block"
+                                    class="font-label text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-on-surface opacity-80">0
+                                    HOURS</span>
+                            </div>
+
+                            <!-- Horizontal Divider 1 -->
+                            <div
+                                class="w-full h-[0.5px] bg-on-surface opacity-10 my-2 shadow-[0_0_2px_rgba(255,255,255,0.1)]">
+                            </div>
+
+                            <!-- Middle Tier: Minutes and Seconds Grid -->
+                            <div class="flex-1 w-full flex items-center justify-center gap-2">
+                                <!-- Minutes Column -->
+                                <div class="flex-1 flex flex-col items-center justify-center">
+                                    <span id="display-minutes"
+                                        class="font-clock text-4xl sm:text-5xl font-black tracking-tighter drop-shadow-sm leading-none">15</span>
+                                    <span
+                                        class="font-label text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant mt-2 opacity-60">Minutes</span>
+                                </div>
+
+                                <!-- Vertical Divider -->
+                                <div
+                                    class="w-[0.5px] h-12 bg-on-surface opacity-10 mx-2 shadow-[0_0_2px_rgba(255,255,255,0.1)]">
+                                </div>
+
+                                <!-- Seconds Column -->
+                                <div class="flex-1 flex flex-col items-center justify-center">
+                                    <span id="display-seconds"
+                                        class="font-clock text-4xl sm:text-5xl font-black tracking-tighter drop-shadow-sm leading-none text-primary">00</span>
+                                    <span
+                                        class="font-label text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.2em] text-on-surface-variant mt-2 opacity-60">Seconds</span>
+                                </div>
+                            </div>
+
+                            <!-- Horizontal Divider 2 -->
+                            <div
+                                class="w-full h-[0.5px] bg-on-surface opacity-10 my-3 shadow-[0_0_2px_rgba(255,255,255,0.1)]">
+                            </div>
+
+                            <!-- Bottom Tier: Remaining Label -->
+                            <div class="h-8 flex items-center justify-center">
+                                <span
+                                    class="font-label text-[10px] sm:text-xs font-bold uppercase tracking-[0.25em] text-primary opacity-90 drop-shadow-glow">Remaining</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interaction Section: Time Pickers -->
+            <div class="grid grid-cols-2 gap-4 mb-8 mt-2">
+                <div class="flex flex-col gap-2">
+                    <label class="font-label text-sm font-bold text-on-surface-variant px-2 text-center">Hours</label>
+                    <div
+                        class="flex h-14 items-center justify-between px-3 rounded-lg bg-surface-container-high shadow-sm">
+                        <button id="btn-dec-hour"
+                            class="material-symbols-outlined text-on-surface-variant hover:text-primary active:scale-90 transition-all text-xl p-1">remove</button>
+                        <div id="picker-hours" class="text-2xl font-headline font-bold text-on-surface w-8 text-center">
+                            00</div>
+                        <button id="btn-inc-hour"
+                            class="material-symbols-outlined text-on-surface-variant hover:text-primary active:scale-90 transition-all text-xl p-1">add</button>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-2">
+                    <label class="font-label text-sm font-bold text-on-surface-variant px-2 text-center">Minutes</label>
+                    <div
+                        class="flex h-14 items-center justify-between px-3 rounded-lg bg-secondary-container shadow-sm">
+                        <button id="btn-dec-min"
+                            class="material-symbols-outlined text-on-secondary-container hover:text-primary active:scale-90 transition-all text-xl p-1">remove</button>
+                        <div id="picker-minutes"
+                            class="text-2xl font-headline font-bold text-on-secondary-container w-8 text-center">45
+                        </div>
+                        <button id="btn-inc-min"
+                            class="material-symbols-outlined text-on-secondary-container hover:text-primary active:scale-90 transition-all text-xl p-1">add</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <button id="btn-start-timer"
+                class="mb-6 mt-2 w-full h-16 flex items-center justify-center gap-2 rounded-xl bg-primary text-on-primary font-headline text-lg font-bold shadow-lg hover:bg-primary-dim transition-all active:scale-95">
+                <span class="material-symbols-outlined text-xl" data-icon="play_arrow"
+                    style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                Start Sleep Timer
+            </button>
+
+            <!-- Task Options -->
+            <div class="flex flex-col gap-3">
+                <h3 class="font-headline text-base font-bold text-on-surface mb-0">When timer ends</h3>
+
+                <!-- Option: Music -->
+                <div
+                    class="flex items-center justify-between p-4 rounded-lg bg-surface-container-low transition-all active:scale-[0.98]">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-highest text-on-surface-variant">
+                            <span class="material-symbols-outlined text-lg" data-icon="music_off">music_off</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm text-on-surface">Turn off music</p>
+                            <p class="text-xs text-on-surface-variant font-medium">Stops all audio playback</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-music" class="sr-only peer" checked>
+                        <div
+                            class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-outline after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Option: Bluetooth -->
+                <div
+                    class="flex items-center justify-between p-4 rounded-lg bg-surface-container-low transition-all active:scale-[0.98]">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="flex h-10 w-10 items-center justify-center rounded-full bg-surface-container-highest text-on-surface-variant">
+                            <span class="material-symbols-outlined text-lg"
+                                data-icon="bluetooth_disabled">bluetooth_disabled</span>
+                        </div>
+                        <div>
+                            <p class="font-bold text-sm text-on-surface">Turn off Bluetooth</p>
+                            <p class="text-xs text-on-surface-variant font-medium">Disconnect wireless buds</p>
+                        </div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle-bluetooth" class="sr-only peer">
+                        <div
+                            class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-surface after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-outline after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary">
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <div class="timer-only">
+                <p class="text-center text-on-surface-variant text-[11px] mt-6 font-bold">
+                    Lights out (and ears off) at <span class="text-primary" id="timer-end-time">11:30 PM</span>
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <!-- BottomNavBar -->
+    <nav
+        class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-md flex justify-around items-center px-4 pb-6 pt-3 bg-surface/50 dark:bg-black/50 backdrop-blur-2xl z-[90] rounded-t-[2rem] shadow-[0_-8px_32px_rgba(0,0,0,0.15)] border-t border-white/40 dark:border-white/10 transition-colors">
+        <!-- Clock Nav -->
+        <button id="nav-clock"
+            class="nav-item flex flex-col items-center justify-center gap-1 active rounded-full px-5 py-1.5 transition-all outline-none"
+            data-target="screen-clock">
+            <div
+                class="nav-icon-wrapper bg-secondary-container text-on-secondary-container rounded-full px-4 py-1 transition-all">
+                <span class="material-symbols-outlined text-xl" data-icon="schedule"
+                    style="font-variation-settings: 'FILL' 1;">schedule</span>
+            </div>
+            <span class="font-headline text-[10px] font-bold tracking-wide">Clock</span>
+        </button>
+
+        <!-- Timer Nav -->
+        <button id="nav-timer"
+            class="nav-item flex flex-col items-center justify-center gap-1 rounded-full px-5 py-1.5 transition-all text-on-surface-variant outline-none"
+            data-target="screen-timer">
+            <div class="nav-icon-wrapper rounded-full px-4 py-1 transition-all">
+                <span class="material-symbols-outlined text-xl" data-icon="hourglass_empty">hourglass_empty</span>
+            </div>
+            <span class="font-headline text-[10px] font-bold tracking-wide">Timer</span>
+        </button>
+
+        <!-- Settings Nav -->
+        <button id="nav-settings"
+            class="nav-item flex flex-col items-center justify-center gap-1 rounded-full px-5 py-1.5 transition-all text-on-surface-variant outline-none"
+            data-target="screen-settings">
+            <div class="nav-icon-wrapper rounded-full px-4 py-1 transition-all">
+                <span class="material-symbols-outlined text-xl">settings</span>
+            </div>
+            <span class="font-headline text-[10px] font-bold tracking-wide">Settings</span>
+        </button>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

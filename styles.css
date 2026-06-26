@@ -1,0 +1,369 @@
+/* app.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+    :root,
+    .theme-organic {
+        --color-primary: #655789;
+        --color-on-primary: #fdf7ff;
+        --color-primary-container: #d4c3fd;
+        --color-on-primary-container: #493c6c;
+        --color-secondary: #625c71;
+        --color-on-secondary: #fdf7ff;
+        --color-secondary-container: #e8def8;
+        --color-on-secondary-container: #554f63;
+        --color-tertiary: #7b5270;
+        --color-on-tertiary: #fff7f9;
+        --color-tertiary-container: #f4bfe3;
+        --color-on-tertiary-container: #5f3956;
+        --color-error: #a8364b;
+        --color-on-error: #fff7f7;
+        --color-error-container: #f97386;
+        --color-on-error-container: #6e0523;
+        --color-background: #fdf7fe;
+        --color-on-background: #34313a;
+        --color-surface: #fdf7fe;
+        --color-on-surface: #34313a;
+        --color-surface-variant: #e7e0ec;
+        --color-on-surface-variant: #615d68;
+        --color-outline: #7d7983;
+        --color-outline-variant: #b5b0bb;
+        --color-surface-tint: #655789;
+        --color-inverse-surface: #0f0d12;
+        --color-inverse-on-surface: #a09ba1;
+        --color-inverse-primary: #d4c3fd;
+        --color-surface-bright: #fdf7fe;
+        --color-surface-container-lowest: #ffffff;
+        --color-surface-container-low: #f8f1fa;
+        --color-surface-container: #f2ecf5;
+        --color-surface-container-high: #ece6f0;
+        --color-surface-container-highest: #e7e0ec;
+        --color-primary-fixed: #d4c3fd;
+        --color-primary-fixed-dim: #c6b6ee;
+        --color-on-primary-fixed: #352857;
+        --color-on-primary-fixed-variant: #524576;
+        --color-secondary-fixed: #e8def8;
+        --color-secondary-fixed-dim: #dad0ea;
+        --color-on-secondary-fixed: #423c50;
+        --color-on-secondary-fixed-variant: #5f586e;
+        --color-tertiary-fixed: #f4bfe3;
+        --color-tertiary-fixed-dim: #e5b2d5;
+        --color-on-tertiary-fixed: #4a2642;
+        --color-on-tertiary-fixed-variant: #694260;
+        --color-primary-dim: #594b7c;
+        --color-secondary-dim: #565065;
+        --color-tertiary-dim: #6e4664;
+        --color-error-dim: #6b0221;
+    }
+
+    /* Neon Nocturne (Always dark for high contrast) */
+    .theme-neon {
+        --color-primary: #00aeff;
+        --color-on-primary: #ffffff;
+        --color-primary-container: #8a0044;
+        --color-on-primary-container: #ffb3d1;
+        --color-secondary: #00e5ff;
+        --color-on-secondary: #000000;
+        --color-secondary-container: #005966;
+        --color-on-secondary-container: #b3faff;
+        --color-tertiary: #0004ff;
+        --color-on-tertiary: #ffffff;
+        --color-tertiary-container: #25196b;
+        --color-on-tertiary-container: #e6b3ff;
+        --color-error: #ff3333;
+        --color-on-error: #ffffff;
+        --color-error-container: #990000;
+        --color-on-error-container: #ffcccc;
+        --color-background: #050a15;
+        --color-on-background: #ffffff;
+        --color-surface: #0a1128;
+        --color-on-surface: #e0e6ed;
+        --color-surface-variant: #1a2238;
+        --color-on-surface-variant: #a0aab8;
+        --color-outline: #4d5b78;
+        --color-outline-variant: #2d3852;
+        --color-surface-tint: #ff007f;
+        --color-inverse-surface: #ffffff;
+        --color-inverse-on-surface: #050a15;
+        --color-inverse-primary: #8a0044;
+        --color-surface-bright: #1c2742;
+        --color-surface-container-lowest: #020611;
+        --color-surface-container-low: #080e21;
+        --color-surface-container: #0a1128;
+        --color-surface-container-high: #0f1833;
+        --color-surface-container-highest: #141f3e;
+        --color-primary-fixed: #ff66b2;
+        --color-primary-fixed-dim: #ff3399;
+        --color-on-primary-fixed: #660033;
+        --color-on-primary-fixed-variant: #99004d;
+        --color-secondary-fixed: #00626d;
+        --color-secondary-fixed-dim: #08828f;
+        --color-on-secondary-fixed: #003333;
+        --color-on-secondary-fixed-variant: #004d4d;
+        --color-tertiary-fixed: #d166ff;
+        --color-tertiary-fixed-dim: #c233ff;
+        --color-on-tertiary-fixed: #430066;
+        --color-on-tertiary-fixed-variant: #6b0099;
+        --color-primary-dim: #cc0066;
+        --color-secondary-dim: #00b3cc;
+        --color-tertiary-dim: #8c00cc;
+        --color-error-dim: #cc0000;
+    }
+
+    /* Solar Dust (Warm Earth Tones) */
+    .theme-solar {
+        --color-primary: #bc6c25;
+        --color-on-primary: #ffffff;
+        --color-primary-container: #faedcd;
+        --color-on-primary-container: #603808;
+        --color-secondary: #606c38;
+        --color-on-secondary: #ffffff;
+        --color-secondary-container: #e9edc9;
+        --color-on-secondary-container: #283618;
+        --color-tertiary: #dda15e;
+        --color-on-tertiary: #ffffff;
+        --color-tertiary-container: #fefae0;
+        --color-on-tertiary-container: #8c5d23;
+        --color-error: #c1121f;
+        --color-on-error: #ffffff;
+        --color-error-container: #fdf0d5;
+        --color-on-error-container: #780000;
+        --color-background: #fdf7f2;
+        --color-on-background: #2b2825;
+        --color-surface: #fdf7f2;
+        --color-on-surface: #2b2825;
+        --color-surface-variant: #e8dfd8;
+        --color-on-surface-variant: #5f5750;
+        --color-outline: #8c837a;
+        --color-outline-variant: #d3c9c1;
+        --color-surface-tint: #bc6c25;
+        --color-inverse-surface: #383431;
+        --color-inverse-on-surface: #f4ece6;
+        --color-inverse-primary: #ffb580;
+        --color-surface-bright: #fffcf9;
+        --color-surface-container-lowest: #ffffff;
+        --color-surface-container-low: #f8efe7;
+        --color-surface-container: #f4e8df;
+        --color-surface-container-high: #efe1d6;
+        --color-surface-container-highest: #eadad0;
+        --color-primary-fixed: #ffdbb8;
+        --color-primary-fixed-dim: #ffc28f;
+        --color-on-primary-fixed: #4d2700;
+        --color-on-primary-fixed-variant: #7a4200;
+        --color-secondary-fixed: #d3e1a0;
+        --color-secondary-fixed-dim: #b8c978;
+        --color-on-secondary-fixed: #202b0c;
+        --color-on-secondary-fixed-variant: #394d15;
+        --color-tertiary-fixed: #ffe8cc;
+        --color-tertiary-fixed-dim: #ffd199;
+        --color-on-tertiary-fixed: #5c3900;
+        --color-on-tertiary-fixed-variant: #885700;
+        --color-primary-dim: #a65814;
+        --color-secondary-dim: #4d5726;
+        --color-tertiary-dim: #c48c48;
+        --color-error-dim: #a30e18;
+    }
+
+    /* AMOLED Midnight (Pitch Black) */
+    .theme-amoled {
+        --color-primary: #cdc0ec;
+        --color-on-primary: #443a5f;
+        --color-primary-container: #2e2645;
+        --color-on-primary-container: #e9deff;
+        --color-secondary: #cbc2db;
+        --color-on-secondary: #433d51;
+        --color-secondary-container: #1e1b26;
+        --color-on-secondary-container: #ffffff;
+        --color-tertiary: #ffcfef;
+        --color-on-tertiary: #69415f;
+        --color-tertiary-container: #4a2642;
+        --color-on-tertiary-container: #f4bfe3;
+        --color-error: #f97386;
+        --color-on-error: #490013;
+        --color-error-container: #871c34;
+        --color-on-error-container: #ff97a3;
+        --color-background: #000000;
+        --color-on-background: #eae3ef;
+        --color-surface: #000000;
+        --color-on-surface: #eae3ef;
+        --color-surface-variant: #1a171f;
+        --color-on-surface-variant: #aea9b4;
+        --color-outline: #78737e;
+        --color-outline-variant: #3a363f;
+        --color-surface-tint: #cdc0ec;
+        --color-inverse-surface: #fdf7fe;
+        --color-inverse-on-surface: #38353b;
+        --color-inverse-primary: #645980;
+        --color-surface-bright: #000000;
+        --color-surface-container-lowest: #000000;
+        --color-surface-container-low: #000000;
+        --color-surface-container: #000000;
+        --color-surface-container-high: #0a080d;
+        --color-surface-container-highest: #121015;
+        --color-primary-fixed: #ded0fe;
+        --color-primary-fixed-dim: #d0c3ef;
+        --color-on-primary-fixed: #3c3256;
+        --color-on-primary-fixed-variant: #594e74;
+        --color-secondary-fixed: #e8def8;
+        --color-secondary-fixed-dim: #dad0ea;
+        --color-on-secondary-fixed: #423c50;
+        --color-on-secondary-fixed-variant: #5f586e;
+        --color-tertiary-fixed: #f4bfe3;
+        --color-tertiary-fixed-dim: #e5b2d5;
+        --color-on-tertiary-fixed: #4a2642;
+        --color-on-tertiary-fixed-variant: #694260;
+        --color-primary-dim: #bfb2de;
+        --color-secondary-dim: #beb5cd;
+        --color-tertiary-dim: #e5b2d5;
+        --color-error-dim: #c44b5f;
+    }
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Animations and transitions */
+.screen {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.screen.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.toast {
+    animation: slideDown 0.3s ease-out forwards;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@media (orientation: landscape) {
+
+    body.on-screen-clock #screen-clock header,
+    body.on-screen-clock #screen-clock .interaction-layer,
+    body.on-screen-clock #main-clock-date,
+    body.on-screen-clock nav.fixed.bottom-0 {
+        display: none !important;
+    }
+
+    body.on-screen-clock #screen-clock {
+        padding-bottom: 0 !important;
+    }
+
+    body.on-screen-clock #screen-clock main {
+        margin-top: 0 !important;
+    }
+
+    body.on-screen-clock.timer-running #landscape-sleep-timer {
+        display: flex !important;
+    }
+}
+
+#landscape-sleep-timer {
+    display: none !important;
+}
+
+@keyframes breathingOrb {
+    0% {
+        transform: scale(0.6);
+        opacity: 0.1;
+    }
+
+    100% {
+        transform: scale(1.5);
+        opacity: 0.9;
+    }
+}
+
+.theme-glow {
+    /* Set to exactly 1s to match your 'every second' requirement */
+    animation: singleBeat 1s ease-out infinite;
+}
+
+@keyframes singleBeat {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0px var(--color-primary);
+    }
+
+    10% {
+        /* The "Hit" - happens quickly at the start */
+        transform: scale(1.2);
+        box-shadow: 0 0 20px var(--color-primary);
+    }
+
+    100% {
+        /* The "Fade" - takes the rest of the second to reset */
+        transform: scale(1);
+        box-shadow: 0 0 0px var(--color-primary);
+    }
+}
+
+.spin-lighting {
+    background: conic-gradient(from 0deg, transparent 0%, var(--color-primary) 15%, var(--color-tertiary-container) 20%, transparent 50%);
+    animation: spin-lighting 10s cubic-bezier(0.68, -0.55, 0.265, 1.55) 2s infinite alternate forwards;
+}
+
+@keyframes spin-lighting {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.show-landscape-controls #landscape-settings-btn {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Visibility toggles */
+.timer-only {
+    display: none;
+}
+
+.timer-running .timer-only {
+    display: block;
+}
