@@ -54,7 +54,7 @@ The interface is built to wow at first glance, featuring:
 
 ## 🚀 Setup & Installation
 1. Download the TickClock App on your Android device or launch an emulator, and click **Install** (or use the Gradle CLI).
-
+2. A web preview of the Android application is also uploaded to show UI, Interactive features and functionalities are disabled here. To experience the full app, please download and install the APK version.
 
 ## 🔒 Permissions Used
 
